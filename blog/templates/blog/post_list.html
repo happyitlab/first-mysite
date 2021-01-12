@@ -1,0 +1,59 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+
+<h1 class="my-4">
+    Blog
+    {% if category %} <small class="text-muted"> {{ category }}</small> {% endif %}
+    {% if search_info %} <small class="text-muted"> : {{ search_info }}({{object_list.count}})</small> {% endif %}
+</h1>
+
+<!-- Blog Post -->
+{% if object_list.exists %}
+{% for p in object_list %}
+<div class="card mb-4">
+    {% if p.head_image %}
+    <img class="card-img-top" src="{{ p.head_image.url }}" alt="Card image cap">
+    {% else %}
+    <img class="card-img-top" src="https://picsum.photos/id/237/750/300" alt="Card image cap">
+    {% endif %}
+
+    <div class="card-body">
+        {% if p.category %}
+        <span class="badge bg-primary float-right">{{ p.category }}</span>
+        {% else %}
+        <span class="badge bg-primary float-right">미분류</span>
+        {% endif %}
+        <h2 class="card-title"> {{ p.title }} </h2>
+        <p class="card-text"> {{ p.content | truncatewords:50 }} </p>
+
+        <!--  버튼 위에 태그 추가  -->
+        {% for tag in p.tags.all %}
+            <a href="{{ tag.get_absolute_url }}">#{{ tag }}</a>
+        {% endfor %}
+
+        <br><br>
+
+        <a href="{{ p.get_absolute_url }}" class="btn btn-primary">Read More &rarr;</a>
+    </div>
+
+    <div class="card-footer text-muted">
+        {{ p.created }}
+        <a href="#">{{ p.author }}</a>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<h2>아직 게시물이 없습니다.</h2>
+{% endif %}
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
